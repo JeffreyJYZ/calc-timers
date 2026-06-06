@@ -1,3 +1,7 @@
+nodeLinker: hoisted
+autoInstallPeers: true
+strictPeerDependencies: false
+packageManagerStrict: false
 allowBuilds:
     esbuild: true
     sharp: true
