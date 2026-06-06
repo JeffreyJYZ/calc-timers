@@ -55,6 +55,12 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
+		<string>processing</string>
+		<string>fetch</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.timedcalc.app.timer</string>
 	</array>
 	<key>NSUserNotificationUsageDescription</key>
 	<string>CalcTimers uses notifications to alert you when a timer finishes.</string>

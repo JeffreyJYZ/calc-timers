@@ -3,5 +3,18 @@
   "identifier": "mobile",
   "description": "Capability for the main window on mobile platforms (iOS, iPadOS, Android).",
   "windows": ["main"],
-  "permissions": ["core:default", "core:window:default", "store:default"]
+  "permissions": [
+    "core:default",
+    "core:window:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:webview:default",
+    "core:event:default",
+    "store:default",
+    "notification:default",
+    "notification:allow-notify",
+    "notification:allow-request-permission",
+    "notification:allow-is-permission-granted"
+  ]
 }

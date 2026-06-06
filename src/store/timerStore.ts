@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { chime, vibrate } from "../lib/audio";
-import { notify, requestNotificationPermission } from "../lib/notifications";
+import { requestNotificationPermission } from "../lib/notifications";
+import { cancelBackgroundTimer, scheduleBackgroundTimer } from "../lib/bg";
 
 export type TimerStatus = "idle" | "running" | "paused" | "finished";
 
@@ -33,6 +34,7 @@ interface TimerState {
   clearFinished: () => void;
   hydrateElapsed: () => void;
   tick: (now: number) => void;
+  onFinished: (id: string) => void;
 }
 
 const COLORS = [
@@ -72,30 +74,31 @@ export const useTimerStore = create<TimerState>()(
         set({ timers: [t, ...get().timers] });
       },
 
-      remove: (id) => set({ timers: get().timers.filter((t) => t.id !== id) }),
-
       update: (id, patch) =>
         set({
           timers: get().timers.map((t) => (t.id === id ? { ...t, ...patch } : t)),
         }),
-
       start: (id) => {
         requestNotificationPermission();
-        set({
-          timers: get().timers.map((t) => {
-            if (t.id !== id) return t;
-            if (t.status === "finished" || t.remainingMs <= 0) return t;
-            return {
-              ...t,
-              status: "running",
-              startedAt: Date.now(),
-              finishedAt: null,
-            };
-          }),
+        const timers = get().timers.map((t) => {
+          if (t.id !== id) return t;
+          if (t.status === "finished" || t.remainingMs <= 0) return t;
+          return {
+            ...t,
+            status: "running" as const,
+            startedAt: Date.now(),
+            finishedAt: null,
+          };
         });
+        const t = timers.find((x) => x.id === id);
+        if (t?.status === "running" && t.remainingMs > 0) {
+          void scheduleBackgroundTimer(id, t.label, Date.now() + t.remainingMs);
+        }
+        set({ timers });
       },
 
       pause: (id) => {
+        void cancelBackgroundTimer(id);
         set({
           timers: get().timers.map((t) => {
             if (t.id !== id || t.status !== "running") return t;
@@ -110,7 +113,8 @@ export const useTimerStore = create<TimerState>()(
         });
       },
 
-      reset: (id) =>
+      reset: (id) => {
+        void cancelBackgroundTimer(id);
         set({
           timers: get().timers.map((t) =>
             t.id === id
@@ -123,9 +127,19 @@ export const useTimerStore = create<TimerState>()(
                 }
               : t,
           ),
-        }),
+        });
+      },
 
-      clearFinished: () => set({ timers: get().timers.filter((t) => t.status !== "finished") }),
+      remove: (id) => {
+        void cancelBackgroundTimer(id);
+        set({ timers: get().timers.filter((t) => t.id !== id) });
+      },
+
+      clearFinished: () => {
+        const finished = get().timers.filter((t) => t.status === "finished");
+        finished.forEach((t) => void cancelBackgroundTimer(t.id));
+        set({ timers: get().timers.filter((t) => t.status !== "finished") });
+      },
 
       hydrateElapsed: () => {
         const now = Date.now();
@@ -153,7 +167,6 @@ export const useTimerStore = create<TimerState>()(
             changed = true;
             if (t.sound) chime();
             if (t.vibrate) vibrate([200, 100, 200, 100, 400]);
-            if (t.notify) void notify("Timer finished", t.label);
             return {
               ...t,
               status: "finished" as const,
@@ -165,6 +178,26 @@ export const useTimerStore = create<TimerState>()(
           return t;
         });
         if (changed) set({ timers: next });
+      },
+
+      onFinished: (id) => {
+        const t = get().timers.find((x) => x.id === id);
+        if (!t || t.status === "finished") return;
+        if (t.sound) chime();
+        if (t.vibrate) vibrate([200, 100, 200, 100, 400]);
+        set({
+          timers: get().timers.map((x) =>
+            x.id === id
+              ? {
+                  ...x,
+                  status: "finished" as const,
+                  remainingMs: 0,
+                  finishedAt: Date.now(),
+                  startedAt: null,
+                }
+              : x,
+          ),
+        });
       },
     }),
     {

@@ -7,6 +7,8 @@ function isTauri(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 }
 
+export { isTauri };
+
 function getStore(): LazyStore {
   if (!store) store = new LazyStore(STORE_FILE);
   return store;
