@@ -14,7 +14,7 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm build",
-		"icons": "node scripts/gen-icons.mjs && node_modules/.bin/tauri icon app-icon.png -o src-tauri/icons"
+		"icons": "node scripts/gen-icons.mjs && pnpx tauri icon app-icon.png -o src-tauri/icons"
 	},
 	"dependencies": {
 		"@tauri-apps/api": "^2.11.0",
