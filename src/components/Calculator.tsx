@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Delete, History as HistoryIcon, X } from "lucide-react";
-import { evaluate, formatResult, prettyExpr } from "../lib/calc";
+import { evaluate, evaluatePreview, prettyExpr } from "../lib/calc";
 import { useCalcStore } from "../store/calcStore";
 
 const BUTTONS: { label: string; kind: string; value: string; span?: number }[] = [
@@ -34,14 +34,6 @@ function endsWithOperator(expr: string): boolean {
 	return /[+\-×÷*/%]$/.test(expr);
 }
 
-function safeEvalPreview(expr: string): string | null {
-	try {
-		return formatResult(evaluate(expr));
-	} catch {
-		return null;
-	}
-}
-
 export function Calculator() {
 	const [expr, setExpr] = useState("");
 	const [result, setResult] = useState("");
@@ -52,10 +44,10 @@ export function Calculator() {
 	const removeHistory = useCalcStore((s) => s.remove);
 	const clearHistory = useCalcStore((s) => s.clear);
 
-	const preview = useMemo(() => (expr ? safeEvalPreview(expr) : null), [expr]);
+	const preview = useMemo(() => (expr ? evaluatePreview(expr) : null), [expr]);
 
 	const handle = useCallback(
-		(kind: string, value: string) => {
+		async (kind: string, value: string) => {
 			setError(null);
 			if (kind === "fn" && value === "AC") {
 				setExpr("");
@@ -72,7 +64,7 @@ export function Calculator() {
 					const before = expr.slice(0, expr.length - last.length);
 					const num = Number(last);
 					if (!Number.isFinite(num)) return;
-					const negated = formatResult(-num);
+					const negated = String(-num);
 					setExpr(before + negated);
 					return;
 				}
@@ -112,7 +104,7 @@ export function Calculator() {
 			if (kind === "eq") {
 				if (!expr) return;
 				try {
-					const r = formatResult(evaluate(expr));
+					const r = await evaluate(expr);
 					setResult(r);
 					pushHistory({ expression: expr, result: r });
 					setExpr(r);
@@ -136,12 +128,12 @@ export function Calculator() {
 			if (/^[0-9.+\-*/%()]$/.test(k)) {
 				ev.preventDefault();
 				const kind = /[0-9.]/.test(k) ? "num" : "op";
-				handle(kind, k);
+				void handle(kind, k);
 				return;
 			}
 			if (k === "Enter" || k === "=") {
 				ev.preventDefault();
-				handle("eq", "=");
+				void handle("eq", "=");
 				return;
 			}
 			if (k === "Backspace") {
@@ -151,7 +143,7 @@ export function Calculator() {
 			}
 			if (k === "Escape" || k.toLowerCase() === "c") {
 				ev.preventDefault();
-				handle("fn", "AC");
+				void handle("fn", "AC");
 			}
 		}
 		window.addEventListener("keydown", onKey);
@@ -212,7 +204,7 @@ export function Calculator() {
 					return (
 						<button
 							key={b.label}
-							onClick={() => handle(b.kind, b.value)}
+							onClick={() => void handle(b.kind, b.value)}
 							className={cls}
 							aria-label={b.label}
 						>

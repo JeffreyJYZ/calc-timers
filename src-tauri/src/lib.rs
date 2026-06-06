@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::sync::Mutex;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+mod calc;
+
 use tauri::async_runtime::JoinHandle;
 use tauri::{
     AppHandle, Emitter, Manager, RunEvent, State, WindowEvent,
@@ -193,6 +195,7 @@ pub fn run() {
             schedule_timer,
             cancel_timer,
             list_scheduled,
+            calc::eval_expression,
         ]);
 
     builder

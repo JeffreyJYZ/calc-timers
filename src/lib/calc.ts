@@ -1,170 +1,139 @@
-export type TokenType = "num" | "op" | "lparen" | "rparen";
+import { invoke } from "@tauri-apps/api/core";
+import { isTauri } from "./storage";
 
-export interface Token {
-	type: TokenType;
-	value: string;
+export function prettyExpr(expr: string): string {
+	return expr.replace(/\*/g, "×").replace(/\//g, "÷").replace(/-/g, "−");
 }
 
-function isDigit(c: string): boolean {
-	return c >= "0" && c <= "9";
-}
-
-export function tokenize(input: string): Token[] {
-	const tokens: Token[] = [];
+function tokenize(input: string): string[] {
+	const tokens: string[] = [];
 	const s = input.replace(/\s+/g, "");
 	let i = 0;
 	while (i < s.length) {
 		const c = s[i];
 		if (c === undefined) break;
-		if (isDigit(c) || c === ".") {
+		if ((c >= "0" && c <= "9") || c === ".") {
 			let j = i;
 			let dots = 0;
 			while (j < s.length) {
 				const cj = s[j];
 				if (cj === undefined) break;
-				if (isDigit(cj)) {
+				if (cj >= "0" && cj <= "9") {
 					j++;
 				} else if (cj === ".") {
 					dots++;
-					if (dots > 1) throw new Error("Invalid number");
+					if (dots > 1) break;
 					j++;
 				} else break;
 			}
-			const value = s.slice(i, j);
-			tokens.push({ type: "num", value });
+			tokens.push(s.slice(i, j));
 			i = j;
 			continue;
 		}
-		if (
-			c === "+" ||
-			c === "-" ||
-			c === "*" ||
-			c === "/" ||
-			c === "%" ||
-			c === "(" ||
-			c === ")"
-		) {
-			const type: TokenType = c === "(" ? "lparen" : c === ")" ? "rparen" : "op";
-			tokens.push({ type, value: c });
+		if ("+-*/%()".includes(c)) {
+			tokens.push(c);
 			i++;
 			continue;
 		}
-		throw new Error(`Unexpected character: ${c}`);
+		break;
 	}
 	return tokens;
 }
 
-const PRECEDENCE: Record<string, number> = { "+": 1, "-": 1, "*": 2, "/": 2, "%": 2 };
-
-function isOpToken(t: Token): boolean {
-	return t.type === "op";
-}
-
-export function toRPN(tokens: Token[]): Token[] {
-	const out: Token[] = [];
-	const ops: Token[] = [];
-	let prev: Token | null = null;
+function toRPN(tokens: string[]): string[] {
+	const out: string[] = [];
+	const ops: string[] = [];
+	const prec: Record<string, number> = { "+": 1, "-": 1, "*": 2, "/": 2, "%": 2 };
+	let prev: string | null = null;
 	for (const t of tokens) {
-		if (t.type === "num") {
+		if (t >= "0" || t === "." || /^[0-9]/.test(t)) {
 			out.push(t);
-		} else if (t.type === "op") {
-			const isUnary = prev === null || prev.type === "op" || prev.type === "lparen";
-			if (isUnary && t.value === "-") {
-				out.push({ type: "num", value: "0" });
-			}
-			while (ops.length > 0) {
-				const top = ops[ops.length - 1];
-				if (
-					top &&
-					isOpToken(top) &&
-					PRECEDENCE[top.value] !== undefined &&
-					PRECEDENCE[t.value] !== undefined &&
-					PRECEDENCE[top.value] >= PRECEDENCE[t.value]
-				) {
-					const popped = ops.pop();
-					if (popped) out.push(popped);
-				} else break;
+		} else if ("+-*/%".includes(t)) {
+			const isUnary = prev === null || "+-*/%(".includes(prev);
+			if (isUnary && t === "-") out.push("0");
+			while (
+				ops.length > 0 &&
+				ops[ops.length - 1] !== undefined &&
+				"+-*/%".includes(ops[ops.length - 1]!) &&
+				prec[ops[ops.length - 1]!] !== undefined &&
+				prec[t] !== undefined &&
+				prec[ops[ops.length - 1]!]! >= prec[t]!
+			) {
+				out.push(ops.pop()!);
 			}
 			ops.push(t);
-		} else if (t.type === "lparen") {
+		} else if (t === "(") {
 			ops.push(t);
-		} else if (t.type === "rparen") {
-			let found = false;
-			while (ops.length > 0) {
-				const top = ops.pop();
-				if (!top) break;
-				if (top.type === "lparen") {
-					found = true;
-					break;
-				}
-				out.push(top);
+		} else if (t === ")") {
+			while (ops.length > 0 && ops[ops.length - 1] !== "(") {
+				out.push(ops.pop()!);
 			}
-			if (!found) throw new Error("Mismatched parentheses");
+			ops.pop();
 		}
 		prev = t;
 	}
-	while (ops.length > 0) {
-		const top = ops.pop();
-		if (!top) break;
-		if (top.type === "lparen" || top.type === "rparen")
-			throw new Error("Mismatched parentheses");
-		out.push(top);
-	}
+	while (ops.length > 0) out.push(ops.pop()!);
 	return out;
 }
 
-export function evaluate(input: string): number {
-	if (!input.trim()) return 0;
-	const tokens = tokenize(input);
-	const rpn = toRPN(tokens);
-	const stack: number[] = [];
+function evalRPN(rpn: string[]): number {
+	const st: number[] = [];
 	for (const t of rpn) {
-		if (t.type === "num") {
-			stack.push(Number(t.value));
-		} else if (t.type === "op") {
-			const b = stack.pop();
-			const a = stack.pop();
-			if (a === undefined || b === undefined) throw new Error("Invalid expression");
-			switch (t.value) {
-				case "+":
-					stack.push(a + b);
-					break;
-				case "-":
-					stack.push(a - b);
-					break;
-				case "*":
-					stack.push(a * b);
-					break;
-				case "/":
-					if (b === 0) throw new Error("Division by zero");
-					stack.push(a / b);
-					break;
-				case "%":
-					if (b === 0) throw new Error("Division by zero");
-					stack.push(a % b);
-					break;
-				default:
-					throw new Error(`Unknown op: ${t.value}`);
+		if (!isNaN(Number(t))) {
+			st.push(Number(t));
+		} else {
+			const b = st.pop()!;
+			const a = st.pop()!;
+			if (t === "+") st.push(a + b);
+			else if (t === "-") st.push(a - b);
+			else if (t === "*") st.push(a * b);
+			else if (t === "/") {
+				if (b === 0) throw new Error("Division by zero");
+				st.push(a / b);
+			} else if (t === "%") {
+				if (b === 0) throw new Error("Division by zero");
+				st.push(a % b);
 			}
 		}
 	}
-	if (stack.length !== 1) throw new Error("Invalid expression");
-	const result = stack[0];
-	if (result === undefined || !Number.isFinite(result)) throw new Error("Math error");
-	return Math.round(result * 1e12) / 1e12;
+	return st[0]!;
 }
 
-export function formatResult(n: number): string {
-	if (!Number.isFinite(n)) return "Error";
+function formatResult(n: number): string {
+	if (!Number.isFinite(n)) throw new Error("Math error");
 	if (Math.abs(n) < 1e-10) return "0";
 	const abs = Math.abs(n);
-	if (abs >= 1e16 || (abs > 0 && abs < 1e-6)) {
+	if (abs >= 1e16 || abs < 1e-6) {
 		return n.toExponential(6).replace(/\.?0+e/, "e");
 	}
 	const fixed = n.toFixed(10);
 	return Number(fixed).toString();
 }
 
-export function prettyExpr(expr: string): string {
-	return expr.replace(/\*/g, "×").replace(/\//g, "÷").replace(/-/g, "−");
+function evaluateSync(input: string): string {
+	if (!input.trim()) return "0";
+	const tokens = tokenize(input);
+	if (tokens.length === 0) return "0";
+	const rpn = toRPN(tokens);
+	const result = evalRPN(rpn);
+	return formatResult(result);
+}
+
+export async function evaluate(input: string): Promise<string> {
+	if (isTauri()) {
+		try {
+			return await invoke<string>("eval_expression", { expr: input });
+		} catch (err) {
+			throw new Error(typeof err === "string" ? err : (err as Error).message);
+		}
+	}
+	return evaluateSync(input);
+}
+
+export function evaluatePreview(input: string): string {
+	try {
+		return evaluateSync(input);
+	} catch {
+		return "";
+	}
 }
