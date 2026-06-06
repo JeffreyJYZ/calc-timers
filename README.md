@@ -18,6 +18,7 @@ Warm-cream pastel theme. Flat surfaces, subtle borders, no glow, no gradient sou
 - Sound, vibration, and OS notifications on timer finish (all opt-out per-timer).
 - Strict TS, ESLint flat config, Prettier, full typecheck + lint + format + build pipeline.
 - 71 kB JS gzipped, 4 kB CSS gzipped.
+- Background timer scheduler (Rust tokio) fires OS notification + emits `timer-finished` event when the app is backgrounded or closed.
 
 ## Stack
 
@@ -44,7 +45,7 @@ calc-timers/
 ├── eslint.config.js
 ├── .prettierrc
 ├── public/
-│   └── icon.svg
+│   └── logo.svg
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx
@@ -63,7 +64,10 @@ calc-timers/
 │       ├── time.ts        # format + parse durations
 │       ├── audio.ts       # WebAudio beep/chime + vibrate
 │       ├── notifications.ts
-│       └── storage.ts     # Tauri store ↔ localStorage adapter
+│       ├── storage.ts     # Tauri store ↔ localStorage adapter
+│       └── bg.ts          # Rust background timer bridge
+├── scripts/
+│   └── gen-icons.mjs      # sharp icon generator
 ├── ios/                   # iOS Xcode project (XcodeGen + CocoaPods)
 │   ├── project.yml
 │   ├── Podfile
@@ -136,6 +140,8 @@ brew install xcodegen
 cd ios && xcodegen generate && pod install && cd ..
 pnpm tauri ios dev
 ```
+
+> The iOS scaffolding in `ios/` is hand-written (XcodeGen + Podfile). The `tauri ios` subcommand exists only in the canary CLI (git install above); the stable `@tauri-apps/cli` 2.11 lacks it.
 
 The iOS project uses:
 
