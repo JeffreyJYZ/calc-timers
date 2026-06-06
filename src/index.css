@@ -1,133 +1,133 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #f3efe6;
-  --color-bg-soft: #ebe6db;
-  --color-surface: #fbf9f3;
-  --color-surface-2: #ffffff;
-  --color-border: #e0d9c8;
-  --color-border-strong: #cdc4ad;
-  --color-text: #2b2823;
-  --color-text-muted: #7a766c;
-  --color-text-subtle: #a39d8e;
-  --color-accent: #7a9b76;
-  --color-accent-strong: #5e7e5a;
-  --color-accent-soft: #d8e3d4;
-  --color-danger: #c47868;
-  --color-success: #7fa374;
-  --color-warning: #c9a45a;
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+	--color-bg: #f3efe6;
+	--color-bg-soft: #ebe6db;
+	--color-surface: #fbf9f3;
+	--color-surface-2: #ffffff;
+	--color-border: #e0d9c8;
+	--color-border-strong: #cdc4ad;
+	--color-text: #2b2823;
+	--color-text-muted: #7a766c;
+	--color-text-subtle: #a39d8e;
+	--color-accent: #7a9b76;
+	--color-accent-strong: #5e7e5a;
+	--color-accent-soft: #d8e3d4;
+	--color-danger: #c47868;
+	--color-success: #7fa374;
+	--color-warning: #c9a45a;
+	--font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 @layer base {
-  html,
-  body,
-  #root {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overscroll-behavior: none;
-  }
+	html,
+	body,
+	#root {
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		background: var(--color-bg);
+		color: var(--color-text);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		overscroll-behavior: none;
+	}
 
-  body {
-    background: var(--color-bg);
-    user-select: none;
-  }
+	body {
+		background: var(--color-bg);
+		user-select: none;
+	}
 
-  button {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    font: inherit;
-  }
+	button {
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		font: inherit;
+	}
 
-  input,
-  textarea {
-    user-select: text;
-    font: inherit;
-  }
+	input,
+	textarea {
+		user-select: text;
+		font: inherit;
+	}
 
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-border-strong);
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-text-subtle);
-  }
+	::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	::-webkit-scrollbar-thumb {
+		background: var(--color-border-strong);
+		border-radius: 3px;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--color-text-subtle);
+	}
 }
 
 @layer utilities {
-  .surface {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-  }
-  .surface-2 {
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border);
-  }
-  .btn-press {
-    transition:
-      transform 0.08s ease,
-      background-color 0.12s ease,
-      border-color 0.12s ease;
-  }
-  .btn-press:active {
-    transform: scale(0.97);
-  }
-  .num-btn {
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
-  }
-  .num-btn:hover {
-    background: var(--color-bg-soft);
-  }
-  .op-btn {
-    background: var(--color-accent-soft);
-    border: 1px solid transparent;
-    color: var(--color-accent-strong);
-  }
-  .op-btn:hover {
-    background: #cddccc;
-  }
-  .fn-btn {
-    background: var(--color-bg-soft);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-  }
-  .fn-btn:hover {
-    background: var(--color-border);
-    color: var(--color-text);
-  }
-  .eq-btn {
-    background: var(--color-accent);
-    border: 1px solid var(--color-accent-strong);
-    color: #fbf9f3;
-    font-weight: 600;
-  }
-  .eq-btn:hover {
-    background: var(--color-accent-strong);
-  }
-  .chip {
-    background: var(--color-bg-soft);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-  }
-  .chip:hover {
-    background: var(--color-border);
-    color: var(--color-text);
-  }
+	.surface {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+	}
+	.surface-2 {
+		background: var(--color-surface-2);
+		border: 1px solid var(--color-border);
+	}
+	.btn-press {
+		transition:
+			transform 0.08s ease,
+			background-color 0.12s ease,
+			border-color 0.12s ease;
+	}
+	.btn-press:active {
+		transform: scale(0.97);
+	}
+	.num-btn {
+		background: var(--color-surface-2);
+		border: 1px solid var(--color-border);
+		color: var(--color-text);
+	}
+	.num-btn:hover {
+		background: var(--color-bg-soft);
+	}
+	.op-btn {
+		background: var(--color-accent-soft);
+		border: 1px solid transparent;
+		color: var(--color-accent-strong);
+	}
+	.op-btn:hover {
+		background: #cddccc;
+	}
+	.fn-btn {
+		background: var(--color-bg-soft);
+		border: 1px solid var(--color-border);
+		color: var(--color-text-muted);
+	}
+	.fn-btn:hover {
+		background: var(--color-border);
+		color: var(--color-text);
+	}
+	.eq-btn {
+		background: var(--color-accent);
+		border: 1px solid var(--color-accent-strong);
+		color: #fbf9f3;
+		font-weight: 600;
+	}
+	.eq-btn:hover {
+		background: var(--color-accent-strong);
+	}
+	.chip {
+		background: var(--color-bg-soft);
+		border: 1px solid var(--color-border);
+		color: var(--color-text-muted);
+	}
+	.chip:hover {
+		background: var(--color-border);
+		color: var(--color-text);
+	}
 }
