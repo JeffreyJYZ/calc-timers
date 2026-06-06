@@ -40,7 +40,7 @@ export function TimerCard({ timer, now }: Props) {
 	return (
 		<div
 			className={`surface relative overflow-hidden rounded-2xl p-4 transition-colors ${
-				isFinished ? "border-[var(--color-success)]" : ""
+				isFinished ? "border-success" : ""
 			}`}
 		>
 			<div className="flex items-start gap-3">
@@ -76,14 +76,12 @@ export function TimerCard({ timer, now }: Props) {
 					<div className="absolute inset-0 flex flex-col items-center justify-center">
 						<div
 							className={`font-mono text-xl font-medium tabular-nums ${
-								isFinished
-									? "text-[var(--color-success)]"
-									: "text-[var(--color-text)]"
+								isFinished ? "text-success" : "text-text"
 							}`}
 						>
 							{formatDuration(remaining, false)}
 						</div>
-						<div className="mt-0.5 text-[10px] tracking-wider text-[var(--color-text-subtle)] uppercase">
+						<div className="text-text-subtle mt-0.5 text-[10px] tracking-wider uppercase">
 							{isFinished ? "Done" : isRunning ? "Running" : timer.status}
 						</div>
 					</div>
@@ -95,10 +93,10 @@ export function TimerCard({ timer, now }: Props) {
 						value={timer.label}
 						onChange={(e) => update(timer.id, { label: e.target.value })}
 						maxLength={32}
-						className="w-full truncate bg-transparent text-base font-medium text-[var(--color-text)] focus:outline-none"
+						className="text-text w-full truncate bg-transparent text-base font-medium focus:outline-none"
 						aria-label="Timer label"
 					/>
-					<div className="mt-0.5 text-xs text-[var(--color-text-subtle)]">
+					<div className="text-text-subtle mt-0.5 text-xs">
 						of {formatDuration(total, total >= 3_600_000)}
 					</div>
 
@@ -130,7 +128,7 @@ export function TimerCard({ timer, now }: Props) {
 						</button>
 						<button
 							onClick={() => remove(timer.id)}
-							className="btn-press chip inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs hover:!text-[var(--color-danger)]"
+							className="btn-press chip hover:!text-danger inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs"
 							aria-label="Delete"
 						>
 							<Trash2 size={12} />
@@ -140,7 +138,7 @@ export function TimerCard({ timer, now }: Props) {
 					<div className="mt-2 flex items-center gap-1">
 						<button
 							onClick={() => update(timer.id, { sound: !timer.sound })}
-							className="btn-press flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-text-subtle)] hover:bg-[var(--color-bg-soft)] hover:text-[var(--color-text)]"
+							className="btn-press text-text-subtle hover:bg-bg-soft hover:text-text flex h-7 w-7 items-center justify-center rounded-md"
 							aria-label={timer.sound ? "Mute sound" : "Enable sound"}
 							title={timer.sound ? "Sound on" : "Sound off"}
 						>
@@ -148,7 +146,7 @@ export function TimerCard({ timer, now }: Props) {
 						</button>
 						<button
 							onClick={() => update(timer.id, { vibrate: !timer.vibrate })}
-							className="btn-press flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-text-subtle)] hover:bg-[var(--color-bg-soft)] hover:text-[var(--color-text)]"
+							className="btn-press text-text-subtle hover:bg-bg-soft hover:text-text flex h-7 w-7 items-center justify-center rounded-md"
 							aria-label={timer.vibrate ? "Disable vibration" : "Enable vibration"}
 							title={timer.vibrate ? "Vibrate on" : "Vibrate off"}
 						>
@@ -159,7 +157,7 @@ export function TimerCard({ timer, now }: Props) {
 						</button>
 						<button
 							onClick={() => update(timer.id, { notify: !timer.notify })}
-							className="btn-press flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-text-subtle)] hover:bg-[var(--color-bg-soft)] hover:text-[var(--color-text)]"
+							className="btn-press text-text-subtle hover:bg-bg-soft hover:text-text flex h-7 w-7 items-center justify-center rounded-md"
 							aria-label={
 								timer.notify ? "Disable notifications" : "Enable notifications"
 							}
@@ -173,7 +171,7 @@ export function TimerCard({ timer, now }: Props) {
 			{isFinished && (
 				<button
 					onClick={() => remove(timer.id)}
-					className="btn-press absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] text-[var(--color-text-muted)] hover:bg-[var(--color-bg-soft)]"
+					className="btn-press border-border bg-surface-2 text-text-muted hover:bg-bg-soft absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-md border"
 					aria-label="Dismiss"
 				>
 					<X size={12} />

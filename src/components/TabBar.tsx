@@ -21,7 +21,7 @@ export function TabBar({ active, onChange, timerCount }: Props) {
 	return (
 		<nav
 			aria-label="Main"
-			className="flex w-full items-end border-b border-[var(--color-border)] bg-[var(--color-bg)] px-2 pt-2 sm:px-4"
+			className="border-border bg-bg flex w-full items-end border-b px-2 pt-2 sm:px-4"
 		>
 			<div className="flex flex-1 gap-1">
 				{items.map(({ id, label, icon: Icon, badge }) => {
@@ -32,8 +32,8 @@ export function TabBar({ active, onChange, timerCount }: Props) {
 							onClick={() => onChange(id)}
 							className={`btn-press relative flex items-center gap-2 rounded-t-xl px-4 py-2.5 text-sm font-medium transition-colors ${
 								isActive
-									? "-mb-px border border-[var(--color-border)] border-b-[var(--color-surface)] bg-[var(--color-surface)] text-[var(--color-text)]"
-									: "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+									? "border-border border-b-surface bg-surface text-text -mb-px border"
+									: "text-text-muted hover:text-text"
 							}`}
 							aria-pressed={isActive}
 						>
@@ -43,8 +43,8 @@ export function TabBar({ active, onChange, timerCount }: Props) {
 								<span
 									className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-semibold ${
 										isActive
-											? "bg-[var(--color-accent)] text-[#fbf9f3]"
-											: "bg-[var(--color-bg-soft)] text-[var(--color-text-muted)]"
+											? "bg-accent text-surface"
+											: "bg-bg-soft text-text-muted"
 									}`}
 								>
 									{badge}

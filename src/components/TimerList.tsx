@@ -45,7 +45,7 @@ export function TimerList() {
 			<TimerForm />
 
 			<div className="flex items-center justify-between px-1">
-				<h2 className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-muted)]">
+				<h2 className="text-text-muted flex items-center gap-2 text-sm font-medium">
 					<TimerIcon size={14} />
 					{timers.length} {timers.length === 1 ? "timer" : "timers"}
 				</h2>
@@ -53,7 +53,7 @@ export function TimerList() {
 					{hasFinished && (
 						<button
 							onClick={clearFinished}
-							className="btn-press inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[var(--color-text-muted)] hover:bg-[var(--color-bg-soft)]"
+							className="btn-press text-text-muted hover:bg-bg-soft inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs"
 						>
 							<Trash2 size={12} /> Clear finished
 						</button>
@@ -64,7 +64,7 @@ export function TimerList() {
 								if (window.confirm(`Delete all ${timers.length} timers?`))
 									clearAll();
 							}}
-							className="btn-press inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[var(--color-danger)] hover:bg-[var(--color-bg-soft)]"
+							className="btn-press text-danger hover:bg-bg-soft inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs"
 						>
 							<Trash2 size={12} /> Clear all
 						</button>
@@ -75,11 +75,9 @@ export function TimerList() {
 			<div className="flex-1 overflow-y-auto pb-2">
 				{sorted.length === 0 ? (
 					<div className="surface flex flex-col items-center justify-center gap-2 rounded-2xl px-4 py-12 text-center">
-						<TimerIcon size={28} className="text-[var(--color-text-subtle)]" />
-						<p className="text-sm text-[var(--color-text-muted)]">No timers yet</p>
-						<p className="text-xs text-[var(--color-text-subtle)]">
-							Add one above or pick a preset
-						</p>
+						<TimerIcon size={28} className="text-text-subtle" />
+						<p className="text-text-muted text-sm">No timers yet</p>
+						<p className="text-text-subtle text-xs">Add one above or pick a preset</p>
 					</div>
 				) : (
 					<ul className="flex flex-col gap-2 sm:gap-3">

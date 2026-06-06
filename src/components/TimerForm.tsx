@@ -50,7 +50,7 @@ export function TimerForm() {
 					onChange={(e) => setLabel(e.target.value)}
 					placeholder="Label (e.g. Eggs)"
 					maxLength={32}
-					className="flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-accent)] focus:outline-none"
+					className="border-border bg-surface-2 text-text placeholder:text-text-subtle focus:border-accent flex-1 rounded-xl border px-3 py-2.5 text-sm focus:outline-none"
 				/>
 				<input
 					type="text"
@@ -62,7 +62,7 @@ export function TimerForm() {
 					inputMode="numeric"
 					placeholder="5:00"
 					aria-label="Duration"
-					className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-2.5 font-mono text-base text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-accent)] focus:outline-none sm:w-28"
+					className="border-border bg-surface-2 text-text placeholder:text-text-subtle focus:border-accent w-full rounded-xl border px-3 py-2.5 font-mono text-base focus:outline-none sm:w-28"
 				/>
 				<button
 					type="submit"
@@ -72,7 +72,7 @@ export function TimerForm() {
 					Add
 				</button>
 			</div>
-			{err && <p className="mt-2 text-xs text-[var(--color-danger)]">{err}</p>}
+			{err && <p className="text-danger mt-2 text-xs">{err}</p>}
 			<div className="mt-3 flex flex-wrap gap-1.5">
 				{PRESETS.map((p) => (
 					<button
