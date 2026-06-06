@@ -208,7 +208,7 @@ export function Calculator() {
             "btn-press flex select-none items-center justify-center rounded-2xl text-xl font-medium sm:text-2xl";
           const cls = `${base} ${
             isEq ? "eq-btn" : isOp ? "op-btn" : isFn ? "fn-btn" : "num-btn"
-          } ${b.span === 2 ? "col-span-2 aspect-auto" : "aspect-square"} sm:aspect-auto sm:min-h-[64px]`;
+          } ${b.span === 2 ? "col-span-2 aspect-201/96" : "aspect-square"} sm:aspect-auto sm:min-h-[64px]`;
           return (
             <button
               key={b.label}
