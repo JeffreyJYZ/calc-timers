@@ -1,0 +1,9 @@
+dist
+src-tauri/target
+node_modules
+android
+ios
+*.min.js
+*.min.css
+package-lock.json
+pnpm-lock.yaml
