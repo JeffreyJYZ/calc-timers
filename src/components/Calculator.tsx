@@ -1,9 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Delete, History as HistoryIcon, X } from "lucide-react";
-import { evaluate, evaluatePreview, prettyExpr } from "../lib/calc";
-import { useCalcStore } from "../store/calcStore";
+import { Delete, History as HistoryIcon, X, FunctionSquare } from "lucide-react";
+import { evaluate, prettyExpr } from "../lib/calc";
+import { useCalcStore, type AngleMode } from "../store/calcStore";
 
-const BUTTONS: { label: string; kind: string; value: string; span?: number }[] = [
+type ButtonKind = "num" | "op" | "fn" | "eq" | "trig" | "const" | "mode" | "drawer";
+
+interface ButtonDef {
+	label: string;
+	kind: ButtonKind;
+	value: string;
+	span?: number;
+}
+
+const STD_BUTTONS: ButtonDef[] = [
 	{ label: "AC", kind: "fn", value: "AC" },
 	{ label: "+/−", kind: "fn", value: "SIGN" },
 	{ label: "%", kind: "op", value: "%" },
@@ -25,13 +34,44 @@ const BUTTONS: { label: string; kind: string; value: string; span?: number }[] =
 	{ label: "=", kind: "eq", value: "=" },
 ];
 
+const SCI_FUNCS: { label: string; insert: (m: AngleMode) => string }[] = [
+	{ label: "sin", insert: () => "sin(" },
+	{ label: "cos", insert: () => "cos(" },
+	{ label: "tan", insert: () => "tan(" },
+	{ label: "asin", insert: () => "asin(" },
+	{ label: "acos", insert: () => "acos(" },
+	{ label: "atan", insert: () => "atan(" },
+	{ label: "sinh", insert: () => "sinh(" },
+	{ label: "cosh", insert: () => "cosh(" },
+	{ label: "tanh", insert: () => "tanh(" },
+	{ label: "log", insert: () => "log(" },
+	{ label: "ln", insert: () => "ln(" },
+	{ label: "exp", insert: () => "exp(" },
+	{ label: "√", insert: () => "sqrt(" },
+	{ label: "∛", insert: () => "cbrt(" },
+	{ label: "x²", insert: () => "^2" },
+	{ label: "xʸ", insert: () => "^" },
+	{ label: "|x|", insert: () => "abs(" },
+	{ label: "1/x", insert: () => "1/(" },
+	{ label: "x!", insert: () => "!" },
+	{ label: "mod", insert: () => "mod(" },
+	{ label: "nPr", insert: () => "nPr(" },
+	{ label: "nCr", insert: () => "nCr(" },
+	{ label: "yroot", insert: () => "yroot(" },
+	{ label: "rand", insert: () => "random()" },
+	{ label: "(", insert: () => "(" },
+	{ label: ")", insert: () => ")" },
+	{ label: "π", insert: () => "pi" },
+	{ label: "e", insert: () => "e" },
+];
+
 function lastNumber(expr: string): string {
 	const m = expr.match(/([0-9.]+)$/);
 	return m ? m[0]! : "";
 }
 
 function endsWithOperator(expr: string): boolean {
-	return /[+\-×÷*/%]$/.test(expr);
+	return /[+\-×÷*/%^!]$/.test(expr);
 }
 
 export function Calculator() {
@@ -39,15 +79,19 @@ export function Calculator() {
 	const [result, setResult] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [showHistory, setShowHistory] = useState(false);
+	const [showDrawer, setShowDrawer] = useState(false);
+	const [mode, setMode] = useState<"std" | "sci">("std");
+	const [second, setSecond] = useState(false);
+
 	const history = useCalcStore((s) => s.history);
 	const pushHistory = useCalcStore((s) => s.push);
 	const removeHistory = useCalcStore((s) => s.remove);
 	const clearHistory = useCalcStore((s) => s.clear);
-
-	const preview = useMemo(() => (expr ? evaluatePreview(expr) : null), [expr]);
+	const angleMode = useCalcStore((s) => s.angleMode);
+	const toggleAngleMode = useCalcStore((s) => s.toggleAngleMode);
 
 	const handle = useCallback(
-		async (kind: string, value: string) => {
+		async (kind: ButtonKind, value: string) => {
 			setError(null);
 			if (kind === "fn" && value === "AC") {
 				setExpr("");
@@ -71,6 +115,26 @@ export function Calculator() {
 				if (endsWithOperator(expr)) {
 					setExpr(expr + "-");
 				}
+				return;
+			}
+			if (kind === "fn" && value === "2ND") {
+				setSecond((s) => !s);
+				return;
+			}
+			if (kind === "mode" && value === "MODE") {
+				setMode((m) => (m === "std" ? "sci" : "std"));
+				return;
+			}
+			if (kind === "drawer" && value === "DRAWER") {
+				setShowDrawer((s) => !s);
+				return;
+			}
+			if (kind === "trig") {
+				setExpr((e) => e + value);
+				return;
+			}
+			if (kind === "const") {
+				setExpr((e) => e + value);
 				return;
 			}
 			if (kind === "op") {
@@ -104,7 +168,7 @@ export function Calculator() {
 			if (kind === "eq") {
 				if (!expr) return;
 				try {
-					const r = await evaluate(expr);
+					const r = await evaluate(expr, angleMode);
 					setResult(r);
 					pushHistory({ expression: expr, result: r });
 					setExpr(r);
@@ -113,7 +177,7 @@ export function Calculator() {
 				}
 			}
 		},
-		[expr, pushHistory],
+		[expr, pushHistory, angleMode],
 	);
 
 	const backspace = useCallback(() => {
@@ -144,11 +208,68 @@ export function Calculator() {
 			if (k === "Escape" || k.toLowerCase() === "c") {
 				ev.preventDefault();
 				void handle("fn", "AC");
+				return;
+			}
+			if (k === "p" || k === "P") {
+				ev.preventDefault();
+				setExpr((e) => e + "pi");
+				return;
+			}
+			if (k === "\\") {
+				ev.preventDefault();
+				toggleAngleMode();
+				return;
 			}
 		}
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
-	}, [handle, backspace, showHistory]);
+	}, [handle, backspace, showHistory, toggleAngleMode]);
+
+	const trigLabel = useCallback((base: string, inv: string) => (second ? inv : base), [second]);
+	const trigInsert = useCallback(
+		(base: string, inv: string) => (second ? inv : base) + "(",
+		[second],
+	);
+
+	const sciButtons: ButtonDef[] = useMemo(() => {
+		return [
+			{ label: "AC", kind: "fn", value: "AC" },
+			{ label: second ? "1st" : "2nd", kind: "fn", value: "2ND" },
+			{ label: angleMode.toUpperCase(), kind: "fn", value: "ANGLE" },
+			{ label: "÷", kind: "op", value: "/" },
+			{ label: trigLabel("sin", "asin"), kind: "trig", value: trigInsert("sin", "asin") },
+
+			{ label: "7", kind: "num", value: "7" },
+			{ label: "8", kind: "num", value: "8" },
+			{ label: "9", kind: "num", value: "9" },
+			{ label: "×", kind: "op", value: "*" },
+			{ label: trigLabel("cos", "acos"), kind: "trig", value: trigInsert("cos", "acos") },
+
+			{ label: "4", kind: "num", value: "4" },
+			{ label: "5", kind: "num", value: "5" },
+			{ label: "6", kind: "num", value: "6" },
+			{ label: "−", kind: "op", value: "-" },
+			{ label: trigLabel("tan", "atan"), kind: "trig", value: trigInsert("tan", "atan") },
+
+			{ label: "1", kind: "num", value: "1" },
+			{ label: "2", kind: "num", value: "2" },
+			{ label: "3", kind: "num", value: "3" },
+			{ label: "+", kind: "op", value: "+" },
+			{
+				label: second ? "exp" : "ln",
+				kind: "trig",
+				value: second ? "exp(" : "ln(",
+			},
+
+			{ label: second ? "e" : "π", kind: "const", value: second ? "e" : "pi" },
+			{ label: "0", kind: "num", value: "0", span: 1 },
+			{ label: ".", kind: "num", value: "." },
+			{ label: "=", kind: "eq", value: "=" },
+			{ label: "√", kind: "trig", value: "sqrt(" },
+		];
+	}, [second, angleMode, trigLabel, trigInsert]);
+
+	const buttons = mode === "std" ? STD_BUTTONS : sciButtons;
 
 	return (
 		<div className="flex h-full w-full flex-col gap-3 p-3 sm:p-4">
@@ -162,6 +283,31 @@ export function Calculator() {
 						<HistoryIcon size={14} />
 						<span>{history.length}</span>
 					</button>
+					<div className="flex items-center gap-1">
+						<button
+							onClick={() => handle("mode", "MODE")}
+							className={`btn-press hover:bg-bg-soft rounded-lg px-2 py-1 font-mono text-[10px] ${
+								mode === "sci" ? "bg-bg-soft" : ""
+							}`}
+							aria-label="Toggle mode"
+						>
+							{mode.toUpperCase()}
+						</button>
+						<button
+							onClick={toggleAngleMode}
+							className="btn-press hover:bg-bg-soft rounded-lg px-2 py-1 font-mono text-[10px]"
+							aria-label="Toggle angle mode"
+						>
+							{angleMode.toUpperCase()}
+						</button>
+						<button
+							onClick={() => handle("drawer", "DRAWER")}
+							className="btn-press hover:bg-bg-soft rounded-lg px-2 py-1"
+							aria-label="Open function drawer"
+						>
+							<FunctionSquare size={14} />
+						</button>
+					</div>
 					<span aria-live="polite" className="text-danger">
 						{error ? error : ""}
 					</span>
@@ -178,7 +324,11 @@ export function Calculator() {
 							error ? "text-danger" : ""
 						}`}
 					>
-						{error ? "Error" : (preview ?? result ?? "0")}
+						{(() => {
+							if (error) return "Error";
+							if (result && !expr) return result;
+							return "0";
+						})()}
 					</div>
 					<button
 						onClick={backspace}
@@ -191,16 +341,44 @@ export function Calculator() {
 				</div>
 			</div>
 
-			<div className="grid flex-1 grid-cols-4 gap-2 sm:gap-2.5">
-				{BUTTONS.map((b) => {
+			<div
+				className={`grid flex-1 gap-2 sm:gap-2.5 ${
+					mode === "std" ? "grid-cols-4" : "grid-cols-5"
+				}`}
+			>
+				{buttons.map((b) => {
 					const isOp = b.kind === "op";
 					const isFn = b.kind === "fn";
 					const isEq = b.kind === "eq";
+					const isTrig = b.kind === "trig";
+					const isConst = b.kind === "const";
 					const base =
 						"btn-press flex select-none items-center justify-center rounded-2xl text-xl font-medium sm:text-2xl";
 					const cls = `${base} ${
-						isEq ? "eq-btn" : isOp ? "op-btn" : isFn ? "fn-btn" : "num-btn"
+						isEq
+							? "eq-btn"
+							: isOp
+								? "op-btn"
+								: isFn
+									? "fn-btn"
+									: isTrig
+										? "trig-btn"
+										: isConst
+											? "const-btn"
+											: "num-btn"
 					} ${b.span === 2 ? "col-span-2 aspect-201/96" : "aspect-square"} sm:aspect-auto sm:min-h-[64px]`;
+					if (b.kind === "fn" && b.value === "ANGLE") {
+						return (
+							<button
+								key={b.label}
+								onClick={toggleAngleMode}
+								className={cls}
+								aria-label="Toggle angle mode"
+							>
+								{b.label}
+							</button>
+						);
+					}
 					return (
 						<button
 							key={b.label}
@@ -213,6 +391,40 @@ export function Calculator() {
 					);
 				})}
 			</div>
+
+			{showDrawer && (
+				<div className="surface fixed inset-x-0 bottom-0 z-30 max-h-[70vh] overflow-y-auto rounded-t-2xl p-4 sm:inset-x-3 sm:bottom-3 sm:rounded-2xl">
+					<div className="mb-3 flex items-center justify-between">
+						<h2 className="text-text text-lg font-medium">Functions</h2>
+						<button
+							onClick={() => setShowDrawer(false)}
+							className="btn-press border-border bg-surface-2 hover:bg-bg-soft flex h-8 w-8 items-center justify-center rounded-lg border"
+							aria-label="Close drawer"
+						>
+							<X size={16} />
+						</button>
+					</div>
+					<div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
+						{SCI_FUNCS.map((f) => (
+							<button
+								key={f.label}
+								onClick={() => {
+									const ins = f.insert(angleMode);
+									setExpr((e) => e + ins);
+									setShowDrawer(false);
+								}}
+								className="btn-press bg-surface-2 text-text hover:bg-bg-soft rounded-xl px-2 py-3 text-sm font-medium sm:text-base"
+							>
+								{f.label}
+							</button>
+						))}
+					</div>
+					<div className="text-text-subtle mt-3 text-center text-xs">
+						Press <kbd className="bg-bg-soft rounded px-1">\\</kbd> to toggle angle mode
+						· <kbd className="bg-bg-soft rounded px-1">p</kbd> for π
+					</div>
+				</div>
+			)}
 
 			{showHistory && (
 				<div className="surface fixed inset-0 z-30 flex flex-col rounded-none p-4 sm:inset-3 sm:rounded-2xl">

@@ -24,3 +24,8 @@ vite.config.js
 *.njsproj
 *.sln
 *.sw?
+
+# Rust
+src-tauri/target
+crates/calc-engine/target
+crates/calc-engine/pkg
