@@ -20,7 +20,7 @@ const BUTTONS: { label: string; kind: string; value: string; span?: number }[] =
   { label: "2", kind: "num", value: "2" },
   { label: "3", kind: "num", value: "3" },
   { label: "+", kind: "op", value: "+" },
-  { label: "0", kind: "num", value: "0" },
+  { label: "0", kind: "num", value: "0", span: 2 },
   { label: ".", kind: "num", value: "." },
   { label: "=", kind: "eq", value: "=" },
 ];
@@ -208,7 +208,7 @@ export function Calculator() {
             "btn-press flex select-none items-center justify-center rounded-2xl text-xl font-medium sm:text-2xl";
           const cls = `${base} ${
             isEq ? "eq-btn" : isOp ? "op-btn" : isFn ? "fn-btn" : "num-btn"
-          } aspect-square sm:aspect-auto sm:min-h-[64px]`;
+          } ${b.span === 2 ? "col-span-2 aspect-auto" : "aspect-square"} sm:aspect-auto sm:min-h-[64px]`;
           return (
             <button
               key={b.label}
