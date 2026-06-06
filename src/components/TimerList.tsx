@@ -7,6 +7,7 @@ import { TimerForm } from "./TimerForm";
 export function TimerList() {
 	const timers = useTimerStore((s) => s.timers);
 	const clearFinished = useTimerStore((s) => s.clearFinished);
+	const clearAll = useTimerStore((s) => s.clearAll);
 	const hydrate = useTimerStore((s) => s.hydrateElapsed);
 	const tick = useTimerStore((s) => s.tick);
 	const [now, setNow] = useState<number>(() => Date.now());
@@ -48,14 +49,27 @@ export function TimerList() {
 					<TimerIcon size={14} />
 					{timers.length} {timers.length === 1 ? "timer" : "timers"}
 				</h2>
-				{hasFinished && (
-					<button
-						onClick={clearFinished}
-						className="btn-press inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[var(--color-text-muted)] hover:bg-[var(--color-bg-soft)]"
-					>
-						<Trash2 size={12} /> Clear finished
-					</button>
-				)}
+				<div className="flex items-center gap-1">
+					{hasFinished && (
+						<button
+							onClick={clearFinished}
+							className="btn-press inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[var(--color-text-muted)] hover:bg-[var(--color-bg-soft)]"
+						>
+							<Trash2 size={12} /> Clear finished
+						</button>
+					)}
+					{timers.length > 0 && (
+						<button
+							onClick={() => {
+								if (window.confirm(`Delete all ${timers.length} timers?`))
+									clearAll();
+							}}
+							className="btn-press inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[var(--color-danger)] hover:bg-[var(--color-bg-soft)]"
+						>
+							<Trash2 size={12} /> Clear all
+						</button>
+					)}
+				</div>
 			</div>
 
 			<div className="flex-1 overflow-y-auto pb-2">

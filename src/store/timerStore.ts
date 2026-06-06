@@ -32,6 +32,7 @@ interface TimerState {
 	pause: (id: string) => void;
 	reset: (id: string) => void;
 	clearFinished: () => void;
+	clearAll: () => void;
 	hydrateElapsed: () => void;
 	tick: (now: number) => void;
 	onFinished: (id: string) => void;
@@ -139,6 +140,11 @@ export const useTimerStore = create<TimerState>()(
 				const finished = get().timers.filter((t) => t.status === "finished");
 				finished.forEach((t) => void cancelBackgroundTimer(t.id));
 				set({ timers: get().timers.filter((t) => t.status !== "finished") });
+			},
+
+			clearAll: () => {
+				get().timers.forEach((t) => void cancelBackgroundTimer(t.id));
+				set({ timers: [] });
 			},
 
 			hydrateElapsed: () => {
