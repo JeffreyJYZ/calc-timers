@@ -21,16 +21,16 @@ Ice-blue dark theme tuned for OLED; runs at native speed on Windows, macOS, Linu
 
 ## Stack
 
-| Layer | Tool |
-| --- | --- |
-| Shell | Tauri 2 (Rust) |
-| UI | React 19 + TypeScript 5.8 |
-| Build | Vite 7 |
-| Styles | Tailwind CSS 4 (via `@tailwindcss/vite`) |
-| State | Zustand 5 (with `persist` middleware) |
-| Icons | lucide-react |
-| Lint | ESLint 10 flat config + typescript-eslint |
-| Format | Prettier 3 + prettier-plugin-tailwindcss |
+| Layer       | Tool                                                        |
+| ----------- | ----------------------------------------------------------- |
+| Shell       | Tauri 2 (Rust)                                              |
+| UI          | React 19 + TypeScript 5.8                                   |
+| Build       | Vite 7                                                      |
+| Styles      | Tailwind CSS 4 (via `@tailwindcss/vite`)                    |
+| State       | Zustand 5 (with `persist` middleware)                       |
+| Icons       | lucide-react                                                |
+| Lint        | ESLint 10 flat config + typescript-eslint                   |
+| Format      | Prettier 3 + prettier-plugin-tailwindcss                    |
 | Persistence | `@tauri-apps/plugin-store` (Tauri) ↔ localStorage (browser) |
 
 ## Project layout
@@ -119,18 +119,18 @@ pnpm tauri android build    # release APK / AAB
 
 ## Scripts
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm dev` | Vite dev server |
-| `pnpm build` | Typecheck + production frontend build |
-| `pnpm preview` | Preview the built frontend |
-| `pnpm tauri ...` | Tauri CLI passthrough |
-| `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm lint` | ESLint flat config |
-| `pnpm lint:fix` | ESLint --fix |
-| `pnpm format` | Prettier --write |
-| `pnpm format:check` | Prettier --check |
-| `pnpm verify` | typecheck + lint + format:check + build |
+| Command             | Purpose                                 |
+| ------------------- | --------------------------------------- |
+| `pnpm dev`          | Vite dev server                         |
+| `pnpm build`        | Typecheck + production frontend build   |
+| `pnpm preview`      | Preview the built frontend              |
+| `pnpm tauri ...`    | Tauri CLI passthrough                   |
+| `pnpm typecheck`    | `tsc --noEmit`                          |
+| `pnpm lint`         | ESLint flat config                      |
+| `pnpm lint:fix`     | ESLint --fix                            |
+| `pnpm format`       | Prettier --write                        |
+| `pnpm format:check` | Prettier --check                        |
+| `pnpm verify`       | typecheck + lint + format:check + build |
 
 ## Keyboard shortcuts (Calculator)
 
