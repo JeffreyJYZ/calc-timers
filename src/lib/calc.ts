@@ -124,7 +124,8 @@ export async function evaluate(input: string): Promise<string> {
 		try {
 			return await invoke<string>("eval_expression", { expr: input });
 		} catch (err) {
-			throw new Error(typeof err === "string" ? err : (err as Error).message);
+			const msg = typeof err === "string" ? err : (err as Error).message;
+			throw new Error(msg, { cause: err });
 		}
 	}
 	return evaluateSync(input);
