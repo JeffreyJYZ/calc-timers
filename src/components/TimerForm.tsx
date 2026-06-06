@@ -42,7 +42,7 @@ export function TimerForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="glass-ice rounded-2xl p-3 sm:p-4">
+    <form onSubmit={onSubmit} className="surface rounded-2xl p-3 sm:p-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <input
           type="text"
@@ -50,7 +50,7 @@ export function TimerForm() {
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Label (e.g. Eggs)"
           maxLength={32}
-          className="flex-1 rounded-xl border border-[var(--color-border)]/40 bg-[var(--color-bg-deep)]/60 px-3 py-2.5 text-sm text-[var(--color-ice)] placeholder:text-[var(--color-frost)]/30 focus:border-[var(--color-accent)]/60 focus:outline-none"
+          className="flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-accent)] focus:outline-none"
         />
         <input
           type="text"
@@ -62,11 +62,11 @@ export function TimerForm() {
           inputMode="numeric"
           placeholder="5:00"
           aria-label="Duration"
-          className="w-full rounded-xl border border-[var(--color-border)]/40 bg-[var(--color-bg-deep)]/60 px-3 py-2.5 font-mono text-base text-[var(--color-ice)] placeholder:text-[var(--color-frost)]/30 focus:border-[var(--color-accent)]/60 focus:outline-none sm:w-28"
+          className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3 py-2.5 font-mono text-base text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] focus:border-[var(--color-accent)] focus:outline-none sm:w-28"
         />
         <button
           type="submit"
-          className="btn-press ice-glow inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-b from-[var(--color-accent)] to-[var(--color-accent-2)] px-4 py-2.5 text-sm font-semibold text-[#02101e]"
+          className="btn-press eq-btn inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm"
         >
           <Plus size={16} />
           Add
@@ -83,7 +83,7 @@ export function TimerForm() {
               setErr(null);
               submit(p.ms);
             }}
-            className="btn-press rounded-lg border border-[var(--color-border)]/30 bg-white/[0.03] px-2.5 py-1 text-xs text-[var(--color-frost)] hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-accent)]/10"
+            className="btn-press chip rounded-lg px-2.5 py-1 text-xs"
           >
             {p.label}
           </button>

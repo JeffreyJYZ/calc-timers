@@ -1,4 +1,4 @@
-import { Calculator, Snowflake, Timer } from "lucide-react";
+import { Calculator, Timer } from "lucide-react";
 
 export type Tab = "calc" | "timers";
 
@@ -21,11 +21,8 @@ export function TabBar({ active, onChange, timerCount }: Props) {
   return (
     <nav
       aria-label="Main"
-      className="glass sticky top-0 z-20 flex w-full items-center border-b border-[var(--color-border)]/40 px-2 py-2 backdrop-blur-xl"
+      className="flex w-full items-end border-b border-[var(--color-border)] bg-[var(--color-bg)] px-2 pt-2 sm:px-4"
     >
-      <div className="flex items-center gap-2 pr-3 pl-1 text-[var(--color-frost)]">
-        <Snowflake size={16} className="opacity-80" />
-      </div>
       <div className="flex flex-1 gap-1">
         {items.map(({ id, label, icon: Icon, badge }) => {
           const isActive = id === active;
@@ -33,31 +30,25 @@ export function TabBar({ active, onChange, timerCount }: Props) {
             <button
               key={id}
               onClick={() => onChange(id)}
-              className={`btn-press relative flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+              className={`btn-press relative flex items-center gap-2 rounded-t-xl px-4 py-2.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-[var(--color-accent)]/15 text-[var(--color-frost)]"
-                  : "text-white/50 hover:bg-white/5 hover:text-white/80"
+                  ? "-mb-px border border-[var(--color-border)] border-b-[var(--color-surface)] bg-[var(--color-surface)] text-[var(--color-text)]"
+                  : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
               }`}
               aria-pressed={isActive}
             >
-              <Icon size={18} aria-hidden />
+              <Icon size={16} aria-hidden />
               <span>{label}</span>
               {badge !== undefined && (
                 <span
-                  className={`ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
+                  className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-semibold ${
                     isActive
-                      ? "bg-[var(--color-accent)] text-[#02101e]"
-                      : "bg-white/10 text-white/70"
+                      ? "bg-[var(--color-accent)] text-[#fbf9f3]"
+                      : "bg-[var(--color-bg-soft)] text-[var(--color-text-muted)]"
                   }`}
                 >
                   {badge}
                 </span>
-              )}
-              {isActive && (
-                <span
-                  className="absolute inset-x-6 -bottom-[5px] h-[3px] rounded-full bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-accent-2)] shadow-[0_0_12px_var(--color-accent)]"
-                  aria-hidden
-                />
               )}
             </button>
           );

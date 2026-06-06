@@ -36,18 +36,18 @@ export function TimerList() {
   });
 
   return (
-    <div className="snow-bg flex h-full w-full flex-col gap-3 p-3 sm:p-4">
+    <div className="flex h-full w-full flex-col gap-3 p-3 sm:p-4">
       <TimerForm />
 
       <div className="flex items-center justify-between px-1">
-        <h2 className="flex items-center gap-2 text-sm font-medium text-[var(--color-frost)]/70">
+        <h2 className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-muted)]">
           <TimerIcon size={14} />
           {timers.length} {timers.length === 1 ? "timer" : "timers"}
         </h2>
         {hasFinished && (
           <button
             onClick={clearFinished}
-            className="btn-press inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[var(--color-frost)]/60 hover:bg-white/5"
+            className="btn-press inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-[var(--color-text-muted)] hover:bg-[var(--color-bg-soft)]"
           >
             <Trash2 size={12} /> Clear finished
           </button>
@@ -56,10 +56,12 @@ export function TimerList() {
 
       <div className="flex-1 overflow-y-auto pb-2">
         {sorted.length === 0 ? (
-          <div className="glass-ice flex flex-col items-center justify-center gap-2 rounded-2xl px-4 py-12 text-center">
-            <TimerIcon size={32} className="text-[var(--color-frost)]/30" />
-            <p className="text-sm text-[var(--color-frost)]/50">No timers yet</p>
-            <p className="text-xs text-[var(--color-frost)]/30">Add one above or pick a preset</p>
+          <div className="surface flex flex-col items-center justify-center gap-2 rounded-2xl px-4 py-12 text-center">
+            <TimerIcon size={28} className="text-[var(--color-text-subtle)]" />
+            <p className="text-sm text-[var(--color-text-muted)]">No timers yet</p>
+            <p className="text-xs text-[var(--color-text-subtle)]">
+              Add one above or pick a preset
+            </p>
           </div>
         ) : (
           <ul className="flex flex-col gap-2 sm:gap-3">

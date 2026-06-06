@@ -36,14 +36,14 @@ interface TimerState {
 }
 
 const COLORS = [
-  "#38bdf8",
-  "#22d3ee",
-  "#67e8f9",
-  "#a5f3fc",
-  "#7dd3fc",
-  "#818cf8",
-  "#c4b5fd",
-  "#34d399",
+  "#7a9b76",
+  "#c9a45a",
+  "#c47868",
+  "#8a7ca8",
+  "#7a9bb0",
+  "#b89472",
+  "#a48a6c",
+  "#7fa374",
 ];
 
 function newId(): string {
@@ -64,7 +64,7 @@ export const useTimerStore = create<TimerState>()(
           status: "idle",
           startedAt: null,
           finishedAt: null,
-          color: color ?? COLORS[get().timers.length % COLORS.length] ?? "#38bdf8",
+          color: color ?? COLORS[get().timers.length % COLORS.length] ?? "#7a9b76",
           notify: true,
           sound: true,
           vibrate: true,

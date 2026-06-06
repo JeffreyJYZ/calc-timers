@@ -1,0 +1,62 @@
+name: CalcTimers
+options:
+  bundleIdPrefix: com.timedcalc
+  deploymentTarget:
+    iOS: "13.0"
+  developmentLanguage: en
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_BITCODE: NO
+    IPHONEOS_DEPLOYMENT_TARGET: "13.0"
+    TARGETED_DEVICE_FAMILY: "1,2"
+targets:
+  CalcTimers:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Runner
+    resources:
+      - path: Runner/Assets.xcassets
+      - path: Runner/Base.lproj/LaunchScreen.storyboard
+    info:
+      path: Runner/Info.plist
+      properties:
+        CFBundleDisplayName: CalcTimers
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        UILaunchStoryboardName: LaunchScreen
+        UIRequiredDeviceCapabilities:
+          - armv7
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIViewControllerBasedStatusBarAppearance: true
+        UIStatusBarStyle: UIStatusBarStyleDefault
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        UIBackgroundModes:
+          - audio
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.timedcalc.app
+        INFOPLIST_FILE: Runner/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        ENABLE_PREVIEWS: YES
+        SWIFT_OBJC_BRIDGING_HEADER: Runner/Runner-Bridging-Header.h
+        OTHER_LDFLAGS: "$(inherited) -ObjC"

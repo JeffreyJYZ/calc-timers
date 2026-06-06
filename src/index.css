@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #040912;
-  --color-bg-deep: #020610;
-  --color-surface: #0b1426;
-  --color-surface-2: #131f38;
-  --color-border: #1c2d4d;
-  --color-ice: #bae6fd;
-  --color-frost: #7dd3fc;
-  --color-accent: #38bdf8;
-  --color-accent-2: #22d3ee;
-  --color-accent-3: #67e8f9;
-  --color-danger: #fb7185;
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
+  --color-bg: #f3efe6;
+  --color-bg-soft: #ebe6db;
+  --color-surface: #fbf9f3;
+  --color-surface-2: #ffffff;
+  --color-border: #e0d9c8;
+  --color-border-strong: #cdc4ad;
+  --color-text: #2b2823;
+  --color-text-muted: #7a766c;
+  --color-text-subtle: #a39d8e;
+  --color-accent: #7a9b76;
+  --color-accent-strong: #5e7e5a;
+  --color-accent-soft: #d8e3d4;
+  --color-danger: #c47868;
+  --color-success: #7fa374;
+  --color-warning: #c9a45a;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 @layer base {
@@ -27,7 +29,7 @@
     margin: 0;
     padding: 0;
     background: var(--color-bg);
-    color: #e0f2fe;
+    color: var(--color-text);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -35,23 +37,20 @@
   }
 
   body {
-    background:
-      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(56, 189, 248, 0.18), transparent 60%),
-      radial-gradient(ellipse 70% 50% at 80% 100%, rgba(34, 211, 238, 0.12), transparent 60%),
-      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(125, 211, 252, 0.06), transparent 60%),
-      var(--color-bg);
-    background-attachment: fixed;
+    background: var(--color-bg);
     user-select: none;
   }
 
   button {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    font: inherit;
   }
 
   input,
   textarea {
     user-select: text;
+    font: inherit;
   }
 
   ::-webkit-scrollbar {
@@ -62,93 +61,73 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
+    background: var(--color-border-strong);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent);
+    background: var(--color-text-subtle);
   }
 }
 
 @layer utilities {
-  .glass {
-    background: rgba(11, 20, 38, 0.55);
-    backdrop-filter: blur(22px) saturate(180%);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
-    border: 1px solid rgba(125, 211, 252, 0.08);
-    box-shadow: 0 4px 24px -8px rgba(0, 0, 0, 0.4);
+  .surface {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
   }
-  .glass-ice {
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(11, 20, 38, 0.7) 60%);
-    backdrop-filter: blur(22px) saturate(180%);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
-    border: 1px solid rgba(125, 211, 252, 0.14);
+  .surface-2 {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
   }
   .btn-press {
     transition:
       transform 0.08s ease,
-      background-color 0.15s ease,
-      box-shadow 0.15s ease,
-      border-color 0.15s ease;
+      background-color 0.12s ease,
+      border-color 0.12s ease;
   }
   .btn-press:active {
-    transform: scale(0.95);
-  }
-  .ice-glow {
-    box-shadow:
-      0 0 0 1px rgba(125, 211, 252, 0.3),
-      0 8px 28px -8px rgba(56, 189, 248, 0.55),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-  .ice-text {
-    background: linear-gradient(180deg, #f0f9ff 0%, #7dd3fc 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    transform: scale(0.97);
   }
   .num-btn {
-    background: linear-gradient(180deg, #18243d 0%, #0e1830 100%);
-    border: 1px solid rgba(125, 211, 252, 0.06);
-    color: #e0f2fe;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
   }
   .num-btn:hover {
-    background: linear-gradient(180deg, #1e2c4a 0%, #14213a 100%);
-    border-color: rgba(125, 211, 252, 0.18);
+    background: var(--color-bg-soft);
   }
   .op-btn {
-    background: linear-gradient(180deg, rgba(56, 189, 248, 0.22) 0%, rgba(34, 211, 238, 0.12) 100%);
-    border: 1px solid rgba(125, 211, 252, 0.18);
-    color: var(--color-frost);
+    background: var(--color-accent-soft);
+    border: 1px solid transparent;
+    color: var(--color-accent-strong);
   }
   .op-btn:hover {
-    background: linear-gradient(180deg, rgba(56, 189, 248, 0.32) 0%, rgba(34, 211, 238, 0.2) 100%);
+    background: #cddccc;
   }
   .fn-btn {
-    background: rgba(125, 211, 252, 0.06);
-    border: 1px solid rgba(125, 211, 252, 0.08);
-    color: #bae6fd;
+    background: var(--color-bg-soft);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
   }
   .fn-btn:hover {
-    background: rgba(125, 211, 252, 0.12);
+    background: var(--color-border);
+    color: var(--color-text);
   }
   .eq-btn {
-    background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
-    color: #02101e;
-    font-weight: 700;
-    box-shadow:
-      0 0 0 1px rgba(125, 211, 252, 0.3),
-      0 8px 24px -8px rgba(56, 189, 248, 0.7),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: var(--color-accent);
+    border: 1px solid var(--color-accent-strong);
+    color: #fbf9f3;
+    font-weight: 600;
   }
   .eq-btn:hover {
-    filter: brightness(1.08);
+    background: var(--color-accent-strong);
   }
-  .snow-bg {
-    background-image:
-      radial-gradient(circle at 12% 18%, rgba(186, 230, 253, 0.04) 0px, transparent 1px),
-      radial-gradient(circle at 78% 32%, rgba(186, 230, 253, 0.04) 0px, transparent 1px),
-      radial-gradient(circle at 32% 78%, rgba(186, 230, 253, 0.03) 0px, transparent 1px),
-      radial-gradient(circle at 88% 88%, rgba(186, 230, 253, 0.04) 0px, transparent 1px);
-    background-size: 240px 240px;
+  .chip {
+    background: var(--color-bg-soft);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+  .chip:hover {
+    background: var(--color-border);
+    color: var(--color-text);
   }
 }
