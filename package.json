@@ -13,7 +13,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm build"
+    "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm build",
+    "icons": "node scripts/gen-icons.mjs && node_modules/.bin/tauri icon app-icon.png -o src-tauri/icons"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.11.0",
@@ -37,6 +38,7 @@
     "globals": "^17.6.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.3.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.60.1",

@@ -14,6 +14,7 @@ export default tseslint.config(
       "ios",
       "*.tsbuildinfo",
       "vite.config.js",
+      "scripts",
     ],
   },
   js.configs.recommended,

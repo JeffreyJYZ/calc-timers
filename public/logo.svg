@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="224" fill="#f3efe6"/>
+  <g transform="translate(512 540)">
+    <rect x="-40" y="-380" width="80" height="80" rx="16" fill="#5e7e5a"/>
+    <rect x="-220" y="-340" width="50" height="40" rx="12" fill="#5e7e5a" transform="rotate(-30 -195 -320)"/>
+    <rect x="170" y="-340" width="50" height="40" rx="12" fill="#5e7e5a" transform="rotate(30 195 -320)"/>
+    <circle r="320" fill="none" stroke="#5e7e5a" stroke-width="32"/>
+    <g stroke="#5e7e5a" stroke-width="22" stroke-linecap="round">
+      <line x1="0" y1="-300" x2="0" y2="-340"/>
+      <line x1="212" y1="-212" x2="242" y2="-242"/>
+      <line x1="300" y1="0" x2="340" y2="0"/>
+      <line x1="212" y1="212" x2="242" y2="242"/>
+      <line x1="0" y1="300" x2="0" y2="340"/>
+      <line x1="-212" y1="212" x2="-242" y2="242"/>
+      <line x1="-300" y1="0" x2="-340" y2="0"/>
+      <line x1="-212" y1="-212" x2="-242" y2="-242"/>
+    </g>
+    <circle r="180" fill="#5e7e5a"/>
+    <path d="M -50 -75 L 90 0 L -50 75 Z" fill="#f3efe6"/>
+  </g>
+</svg>
